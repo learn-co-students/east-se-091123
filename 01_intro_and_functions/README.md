@@ -4,7 +4,7 @@
 
 - [ ] Describe what functions are and their central importance in JS
 - [ ] Review syntax differences between regular functions and arrow functions
-- [ ]Explain the difference between:
+- [ ] Explain the difference between:
   - [ ] Block scope
   - [ ] Function scope
   - [ ] Global scope
