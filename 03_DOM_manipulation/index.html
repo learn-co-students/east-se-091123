@@ -1,40 +1,47 @@
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Css style sheet -->
-    <link rel="stylesheet" href="style.css">
 
-    <!-- JavaScript file -->
-    <!-- defer - this file will load after the DOM loads -->
-    <script defer src="src/index.js"></script>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Css style sheet -->
+  <link rel="stylesheet" href="style.css">
 
-    <!-- Data file -->
-    <script src="src/data.js"></script>
+  <!-- JavaScript file -->
+  <!-- defer - this file will load after the DOM loads -->
+  <script defer src="src/index.js"></script>
 
-    <title>DOM Manipulation</title>
-  </head>
-  <body>
-    <div class="list" id="header">
-      <header>
-        <div>
-          <h1 id="name"></h1>
-          <h2 id="location"></h2>
-          <h2 id="number"></h2>
-        </div>
-      </header>
-      <main>
-        <div class="list">
-          <ul id="book-list">
-          </ul>
-        </div>
-      </main>
-      <footer>
-        <div>first</div>
-        <div>second</div>
-        <div>third</div>
-      </footer>
-    </div>
-  </body>
+  <!-- Data file -->
+  <script src="src/data.js"></script>
+
+  <title>DOM Manipulation</title>
+</head>
+
+<body>
+  <div class="list" id="header">
+    <header>
+      <div>
+        <h1 id="name"></h1>
+        <h2 id="location"></h2>
+        <h2 id="number"></h2>
+      </div>
+    </header>
+    <main>
+      <div class="list">
+
+        <ul id="book-list">
+          <li>One Book</li>
+          <li>Another Book</li>
+        </ul>
+      </div>
+    </main>
+    <footer>
+      <div>first</div>
+      <div>second</div>
+      <div>third</div>
+    </footer>
+  </div>
+
+</body>
+
 </html>
