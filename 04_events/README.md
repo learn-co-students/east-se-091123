@@ -17,4 +17,4 @@ someForm.addEventListener( 'submit', (eventObj) => {
 ```
 Note the parameter in our callback to `addEventListner`.  When `addEventListener` invokes the function we give it, __*`addEventListener` will give that function an argument*__.  The argument given to the function is a JavaScript object containing information about the event itself.  
 
-While not always required, the event object _is REQUIRED when using forms_ as it can be used to prevent default behavior as well at provide data given by the user.  
+While not always needed, the event object _is REQUIRED when using forms_ as it can be used to prevent default behavior as well at provide data given by the user.  
