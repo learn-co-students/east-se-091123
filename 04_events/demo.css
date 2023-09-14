@@ -1,0 +1,26 @@
+
+body { background: #282c34; color: white; font-size: 1.75em }
+
+header { text-align: center }
+
+main { display: flex; justify-content: space-around }
+
+#counter {
+    display: flex;
+    flex-direction: column;
+    align-items: center
+}
+
+#counter > span { font-size: 3em }
+
+#counter > button { font-size: 1.25em }
+
+#counter > * { margin: 3rem }
+
+form { transform: scale( 1.5 ) }
+
+section#formstuff {
+    display: flex;
+    flex-direction: column;
+    justify-content: center
+}
