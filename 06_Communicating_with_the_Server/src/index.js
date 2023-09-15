@@ -1,5 +1,6 @@
 // Create variables to hold onto the URLs so we don't hardcode them in. This will make life easy for us in the future!!! 🤓
-
+const firstStoreUrl = 'http://localhost:3000/stores/1'
+const booksUrl = 'http://localhost:3000/books'
 
 //////////////////////////////////////
 // render functions (DOM Manipulation)
@@ -40,12 +41,29 @@ function renderBookCard(cardData) {
     document.querySelector('#book-list').append(li)
 }
 
+function renderBooks(books) {
+    // render the books on the DOM
+    books.forEach((book) => renderBookCard(book))
+}
 
 // Write a function to fetch the books from our db.json file!!! 🙌
-
+function fetchBooks() {
+    fetch(booksUrl)
+        .then((response) => response.json())
+        .then(renderBooks)
+}
+fetchBooks()
 
 // A function that will now fetch our store information!
-
+function getFirstStore() {
+    fetch(firstStoreUrl)
+        .then((response) => response.json())
+        .then((store) => {
+            renderHeader(store)
+            renderFooter(store)
+        })
+}
+getFirstStore()
 // console.log("before fetch")
 // fetch("http://localhost:3000/stores") //endpoint
 //     .then(resp => resp.json()) //parsing it from JSON to JS 
