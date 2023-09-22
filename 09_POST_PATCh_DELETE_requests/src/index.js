@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
 /////////////////////////////
 // fetch functions
-    function fetchResource(url){
-        return fetch(url)
-        .then(res => res.json())
-    }
+    // function fetchResource(url){
+    //     return fetch(url)
+    //     .then(res => res.json())
+    // }
 
 
 
@@ -57,13 +57,33 @@ document.addEventListener('DOMContentLoaded', () => {
             price: e.target.price.value,
             imageUrl: e.target.imageUrl.value,
             inventory:e.target.inventory.value,
-            reviews:[]
+            reviews: []
         }
         //optimistic rendering
         // renderBookCard(book)
-
-
+        const requestObj = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Accept': 'application/json' wants json back in response
+            },
+            body: JSON.stringify(book)      
+        }
         //post book invocation function 
+        fetch('http://localhost:3000/books', requestObj)
+        .then((resp) => {
+            if (resp.ok) {
+                return resp.json()
+            } else {
+                throw resp.statusText
+            }
+        })
+        .then(newBookObj => {
+            console.log('successful')
+            renderBookCard(newBookObj)
+            e.target.reset() 
+        } )
+        .catch(( error ) => console.log(error))
 
     }
 
@@ -71,17 +91,21 @@ document.addEventListener('DOMContentLoaded', () => {
 /////////////////////////////
 // Invoking functions    
     //initial store render 
-    fetchResource('http://localhost:3000/stores/1') //1st .then() returns a promise
-    .then(store => { //2nd .then()
-        renderHeader(store)//rendering the data
-        renderFooter(store)
-    })
-    .catch(e => console.error(e))
+    // fetchResource('http://localhost:3000/stores/1') //1st .then() returns a promise
+    fetch('http://localhost:3000/stores/1')
+        .then(resp => resp.json())
+        .then(store => { //2nd .then()
+            renderHeader(store)//rendering the data
+            renderFooter(store)
+        })
+        .catch(e => console.error(e))
 
     //render response data => book
-    fetchResource('http://localhost:3000/books')
-    .then(books => books.forEach(renderBookCard))
-    .catch(e => console.error(e))
+    // fetchResource('http://localhost:3000/books')
+    fetch('http://localhost:3000/books')
+        .then(resp => resp.json())
+        .then(books => books.forEach(renderBookCard))
+        .catch(e => console.error(e))
 
     document.querySelector('#book-form').addEventListener('submit', handleForm)
 
