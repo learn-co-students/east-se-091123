@@ -69,11 +69,7 @@
           "content": "Only JS book anyone needs"
         }
       ],
-<<<<<<< HEAD
       "inventory": "9",
-=======
-      "inventory": 8,
->>>>>>> main
       "imageUrl": "https://images-na.ssl-images-amazon.com/images/I/5131OWtQRaL._SX218_BO1,204,203,200_QL40_FMwebp_.jpg"
     },
     {
@@ -139,36 +135,6 @@
       ],
       "inventory": 20,
       "imageUrl": "https://images-na.ssl-images-amazon.com/images/I/41oYsXjLvZL._SY344_BO1,204,203,200_.jpg"
-<<<<<<< HEAD
-=======
-    },
-    {
-      "title": "Eloquent JavaScript: A Modern Introduction to Programming",
-      "author": "Marjin Haverbeke",
-      "price": 10,
-      "reviews": [],
-      "inventory": 10,
-      "imageUrl": "https://images-na.ssl-images-amazon.com/images/I/51IKycqTPUL._SX218_BO1,204,203,200_QL40_FMwebp_.jpg",
-      "id": 8
-    },
-    {
-      "title": "orchid",
-      "author": "gamer",
-      "price": "10",
-      "imageUrl": "https://petcube.com/blog/content/images/2018/04/boo-the-dog-3.jpg",
-      "inventory": "10",
-      "reviews": [],
-      "id": 9
-    },
-    {
-      "title": "orchid",
-      "author": "gamer",
-      "price": "10",
-      "imageUrl": "https://petcube.com/blog/content/images/2018/04/boo-the-dog-3.jpg",
-      "inventory": "10",
-      "reviews": [],
-      "id": 10
->>>>>>> main
     }
   ]
 }
