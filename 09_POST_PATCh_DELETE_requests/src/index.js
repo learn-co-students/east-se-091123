@@ -26,19 +26,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderBookCard(cardData) {
+<<<<<<< HEAD
         // console.log(cardData)
+=======
+>>>>>>> main
         const li = document.createElement('li')
         const h3 = document.createElement('h3')
         const pAuthor = document.createElement('p')
         const pPrice = document.createElement('p')
         const img = document.createElement('img')
         const btn = document.createElement('button')
+<<<<<<< HEAD
         const inpt = document.createElement('input')
+=======
+>>>>>>> main
 
         h3.textContent = cardData.title
         pAuthor.textContent = cardData.author
         pPrice.textContent = `$${cardData.price}`
         btn.textContent = 'Delete'
+<<<<<<< HEAD
         inpt.value = cardData.inventory
         inpt.type = 'number'
 
@@ -96,6 +103,16 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     
         li.append(h3,pAuthor,pPrice,img,btn,inpt)
+=======
+
+        img.src = cardData.imageUrl
+        li.className = 'list-li'
+
+        //Event Listeners 
+        btn.addEventListener('click',()=>li.remove())
+    
+        li.append(h3,pAuthor,pPrice,img,btn)
+>>>>>>> main
         document.querySelector('#book-list').append(li)
     }
 
@@ -111,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             price: e.target.price.value,
             imageUrl: e.target.imageUrl.value,
             inventory:e.target.inventory.value,
+<<<<<<< HEAD
             reviews: []
         }
         //optimistic rendering
@@ -138,6 +156,15 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.reset() 
         } )
         .catch(( error ) => console.log(error))
+=======
+            reviews:[]
+        }
+        //optimistic rendering
+        // renderBookCard(book)
+
+
+        //post book invocation function 
+>>>>>>> main
 
     }
 
@@ -145,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /////////////////////////////
 // Invoking functions    
     //initial store render 
+<<<<<<< HEAD
     // fetchResource('http://localhost:3000/stores/1') //1st .then() returns a promise
     fetch('http://localhost:3000/stores/1')
         .then(resp => resp.json())
@@ -160,6 +188,19 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(resp => resp.json())
         .then(books => books.forEach(renderBookCard))
         .catch(e => console.error(e))
+=======
+    fetchResource('http://localhost:3000/stores/1') //1st .then() returns a promise
+    .then(store => { //2nd .then()
+        renderHeader(store)//rendering the data
+        renderFooter(store)
+    })
+    .catch(e => console.error(e))
+
+    //render response data => book
+    fetchResource('http://localhost:3000/books')
+    .then(books => books.forEach(renderBookCard))
+    .catch(e => console.error(e))
+>>>>>>> main
 
     document.querySelector('#book-form').addEventListener('submit', handleForm)
 
