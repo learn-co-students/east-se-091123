@@ -117,3 +117,4 @@ Calling the setter function does two things:
 - [React Docs - Hooks](https://reactjs.org/docs/hooks-overview.html)
 - [React Docs - Functional State Updates](https://reactjs.org/docs/hooks-reference.html#functional-updates)
 - [React Docs - Stale State Problem](https://reactjs.org/docs/hooks-faq.html#why-am-i-seeing-stale-props-or-state-inside-my-function)
+- [Lecture Slides](https://raw.githack.com/learn-co-students/east-se-091123/main/11_state_and_events/assets/export/index.html)

@@ -6,12 +6,13 @@ import ProjectList from "./components/ProjectList";
 
 import projects from "./projects";
 
+
 function App() {
   return (
     <div className="App">
       <Header />
       <ProjectForm />
-      <ProjectList  />
+      <ProjectList projects={projects} />
     </div>
   );
 };
