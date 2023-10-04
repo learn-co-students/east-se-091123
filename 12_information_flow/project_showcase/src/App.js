@@ -11,7 +11,7 @@ function App() {
     <div className="App">
       <Header />
       <ProjectForm />
-      <ProjectList  />
+      <ProjectList projects={projects} />
     </div>
   );
 };

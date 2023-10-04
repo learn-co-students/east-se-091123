@@ -1,14 +1,22 @@
-import React from "react";
+import { useState } from "react";
 
 function Header() {
+  const [isLight, setIsLight] = useState(true);
+
+  const renderButtonText = isLight ? "Dark Mode" : "Light Mode";
+
+  function handleButtonClick() {
+    setIsLight((currentState) => !currentState);
+  }
+
   return (
     <header>
       <h1>
-        <span className="logo">{"//"}</span>
+        <span className="logo"> {"//"} </span>
         Project Showcase
       </h1>
       <nav>
-        <button>Light Mode</button>
+        <button onClick={handleButtonClick}> {renderButtonText} </button>
       </nav>
     </header>
   );
