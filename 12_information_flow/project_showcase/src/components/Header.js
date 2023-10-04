@@ -1,12 +1,8 @@
-import { useState } from "react";
-
-function Header() {
-  const [isLight, setIsLight] = useState(true);
-
+function Header({ isLight, onIsLightChange }) {
   const renderButtonText = isLight ? "Dark Mode" : "Light Mode";
 
   function handleButtonClick() {
-    setIsLight((currentState) => !currentState);
+    onIsLightChange();
   }
 
   return (
