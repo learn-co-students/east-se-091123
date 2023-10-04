@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>P2L3 - React Information Flow</title>
+
+  <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+  <meta name="author" content="Hakim El Hattab">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="libs/reveal.js/4.3.1/reset.css">
+  <link rel="stylesheet" href="libs/reveal.js/4.3.1/reveal.css">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+  <!-- highlight Theme -->
+  
+  <link rel="stylesheet" href="libs/highlight.js/11.3.1/styles/monokai.min.css">
+  
+	
+		
+	<link rel="stylesheet" href="libs/reveal.js/4.3.1/plugin/chalkboard/style.css">
+	
+	
+	
+  <link rel="stylesheet" href="libs/reveal.js/4.3.1/plugin/customcontrols/style.css">
+  
+	
+
+
+
+  <!-- Revealjs Theme -->
+  
+  <link rel="stylesheet" href="libs/reveal.js/4.3.1/theme/night.css" id="theme">
+  
+  
+
+  <link rel="stylesheet" href="libs/styles/tasklist.css">
+	<link rel="stylesheet" href="libs/styles/iota.css">
+	<link rel="stylesheet" href="libs/styles/layout.css">
+
+
+  <!-- Revealjs Theme -->
+  
+
+   <!-- css list -->
+	
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  
+
+   
+
+</head>
+
+<body>
+
+   
+
+  <div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+      
+
+
+    
+        <section >
+            
+            <h2>React Information Flow</h2>
+<img src="https://res.cloudinary.com/dlzuobe8h/image/upload/v1663777860/phase2/logo_rato6n.png">
+<p><a href="https://labs.tadigital.com/index.php/2020/03/31/unidirectional-data-flow-in-react/">https://labs.tadigital.com/index.php/2020/03/31/unidirectional-data-flow-in-react/</a></p>
+
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>✅ Objectives</h3>
+<ul>
+<li>Define the term “lifting state”</li>
+<li>Recognize the pattern for changing state in a parent component from a child component</li>
+<li>Explain the role that callback functions play in changing parent state</li>
+<li>Observe how we can render reusable components that invoke different callback functions after an event</li>
+<li>Recognize destructured props and how to work with them</li>
+</ul>
+
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>Lifting State Up ⬆️</h3>
+<p>“In React, sharing state is accomplished by moving it up to the closest common ancestor of the components that need it. This is called <strong>“lifting state up”.</strong>”</p>
+<p><a href="https://reactjs.org/docs/lifting-state-up.html">https://reactjs.org/docs/lifting-state-up.html</a></p>
+
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h4>🤔 Decisions - Where should state be?</h4>
+<div style="font-size: 0.8em">
+<p>From <a href="https://reactwithhooks.netlify.app/docs/thinking-in-react.html#step-4-identify-where-your-state-should-live">Step 4 of Thinking in React</a>: To decide where state should live, for each piece of state in your application:</p>
+<ul>
+<li>Identify every component that renders something based on that state.</li>
+<li class="fragment">Find a <strong>common owner component</strong> (a single component above all the components that need the state in the hierarchy).</li>
+<li class="fragment">Either the common owner or another component higher up in the hierarchy should own the state.</li>
+<li class="fragment">If you can’t find a component where it makes sense to own the state, create a new component solely for holding the state and add it somewhere in the hierarchy above the common owner component.</li>
+</ul>
+</div>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>Current Data Flow</h3>
+<div style="display: flex;">
+<div style="width: 60%">
+<center><img src="./component-hierarchy-with-data-flow.drawio.svg" alt="Component Hierarchy" style="height: 70vh" width="1500"></center>
+</div>
+<div style="width: 40%; font-size: 0.6em; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+<p>💡 Question 1: Do you see a problem with storing <code>isDarkMode</code> in state within the <code>Header</code> component?</p>
+<p class="fragment">💡 Question 2: How about storing <code>projects</code> in state within the <code>ProjectList</code> component?</p>
+<p class="fragment">💡 Question 3: How about storing <code>searchQuery</code> in state within the <code>ProjectList</code> component?</p>
+</div>
+</div>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>Updated Data Flow</h3>
+<center><img src="./component-hierarchy-with-updated-data-flow.drawio.svg" alt="Component Hierarchy" style="height: 70vh" width="1500"></center>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h4>First Task: Lifting the darkMode state up 🔧</h4>
+<div style="font-size: 0.8em">
+<ul>
+<li>
+<p>Currently, we have our isDarkMode state within the Header component.</p>
+</li>
+<li>
+<p>What’s the problem with that?</p>
+</li>
+<li class="fragment">
+<p>If we want to update the style of the entire application as it changes, we will only cause a re-render to <code>Header</code> component and its children. We won’t be able to switch the entire app into dark mode</p>
+</li>
+</ul>
+</div>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <iframe src="https://codesandbox.io/embed/inverse-data-flow-diagram-mtvrs6?fontsize=14&hidenavigation=1&theme=dark&view=preview"
+  style="width:100%; height:880px; border:0; border-radius: 4px; overflow:hidden;"
+  title="inverse-data-flow-diagram"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
+<p><a href="https://mtvrs6.csb.app/" target="_blank" rel="noreferrer">🔖 Feel free to bookmark this!</a></p>
+
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h4>Let’s fix it! 😸</h4>
+<div style="font-size: 0.8em">
+<ol>
+<li>
+<p>Lift the <code>isDarkMode</code> state to the <code>App</code> component.</p>
+</li>
+<li class="fragment">
+<p>Create a function <code>onToggleDarkMode</code> that will handle updating the value of <code>isDarkMode</code> when necessary</p>
+</li>
+<li class="fragment">
+<p>Pass <code>isDarkMode</code> down as a prop to the <code>Header</code> component to use as the condition for what text the button will render</p>
+</li>
+<li class="fragment">
+<p>Pass <code>onToggleDarkMode</code> to be used as a callback function when the button is clicked</p>
+</li>
+</ol>
+<p class="fragment">❓ Why? This allows us to maintain the state and manage its value where the state is defined</p>
+</div>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h4>Diagram</h4>
+<center><img src="https://res.cloudinary.com/dnocv6uwb/image/upload/v1645814361/react-inverse-data-flow-diagram_zpunjn.png" alt="Information flow diagram" style="height: 78vh"></center>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h4>Recap</h4>
+<p><small>First, move the <code>isDarkMode</code> to the <code>App</code> component:</small></p>
+<pre><code class="language-js">function App() {
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+...
+</code></pre>
+<p><small>Second, create the <code>onToggleDarkMode</code> function that will update the <code>isDarkMode</code> state:</small></p>
+<pre><code class="language-js">const onToggleDarkMode = () =&gt; setIsDarkMode(isDarkMode =&gt; !isDarkMode);
+</code></pre>
+<p><small>Third, pass both <code>isDarkMode</code> and <code>onToggleDarkMode</code> to <code>Header</code> as props</small></p>
+<pre><code class="language-jsx">&lt;Header isDarkMode={isDarkMode} onToggleDarkMode={onToggleDarkMode} /&gt;
+</code></pre>
+
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h4>Inside the Header component:</h4>
+<p><small>Destructure the props in the argument and use the variables to render the button text and invoke the callback within your <code>onClick</code> event handler:</small></p>
+<pre><code class="language-js">function Header({ isDarkMode, onToggleDarkMode }) {
+  const handleToggleDarkMode = (e) =&gt; {
+    onToggleDarkMode();
+  }
+  
+  const buttonText = isDarkMode ? &quot;Light Mode&quot; : &quot;Dark Mode&quot;
+
+  return (
+    &lt;header&gt;
+      &lt;h1&gt;
+        &lt;span className=&quot;logo&quot;&gt;{&quot;//&quot;}&lt;/span&gt;
+        Project Showcase
+      &lt;/h1&gt;
+      &lt;button onClick={handleToggleDarkMode}&gt;{buttonText}&lt;/button&gt;
+    &lt;/header&gt;
+  );
+};
+
+export default Header;
+</code></pre>
+
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>What about projects?</h3>
+<iframe src="https://codesandbox.io/embed/inverse-data-flow-diagram-mtvrs6?fontsize=14&hidenavigation=1&theme=dark&view=preview"
+  style="width:100%; height:880px; border:0; border-radius: 4px; overflow:hidden;"
+  title="inverse-data-flow-diagram"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h4>Lifting Projects in State</h4>
+<p><small>We need to modify <code>projects</code> from <code>ProjectForm</code> as well as access it from <code>ProjectList</code> so it needs to live in a common parent, in this case, we’ll move it to our new <code>ProjectsContainer</code> component:</small></p>
+<pre><code class="language-js">// this needs to move up
+const [projects, setProjects] = useState([]);
+// as does the function that updates this piece of state
+const loadProjects = () =&gt; {
+  fetch(&quot;http://localhost:4000/projects&quot;)
+    .then((res) =&gt; res.json())
+    .then((projects) =&gt; setProjects(projects));
+}
+</code></pre>
+
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h4>Passing down the props</h4>
+<p><small>After lifting state up, we need to pass it down as props to the component where it lived before!</small></p>
+<pre><code class="language-js">// src/components/ProjectsContainer.js
+&lt;ProjectList projects={projects} onLoadProjects={onLoadProjects} /&gt;
+
+// src/components/ProjectList.js
+const ProjectList = ({ projects, onLoadProjects }) =&gt; { 
+</code></pre>
+<small>
+<p>Notice we’re renaming <code>loadProjects</code> to <code>onLoadProjects</code> to indicate that it is a callback function that will be associated with an event handler in a child component.</p>
+<p>Naming convention =&gt; <code>onBehaviorName</code></p>
+</small>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h4>💡 Conclusion</h4>
+<iframe src="https://codesandbox.io/embed/inverse-data-flow-diagram-mtvrs6?fontsize=14&hidenavigation=1&theme=dark&view=preview"
+  style="width:100%; height:650px; border:0; border-radius: 4px; overflow:hidden;"
+  title="inverse-data-flow-diagram"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
+            </section>
+    
+
+
+    </div>
+
+
+  </div>
+
+  <div class="line top"></div>
+  <div class="line bottom"></div>
+  <div class="line left"></div>
+  <div class="line right"></div>
+
+  <script src="libs/reveal.js/4.3.1/reveal.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/notes/notes.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/markdown/markdown.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/highlight/highlight.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/math/math.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/fullscreen/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/animate/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/animate/svg.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/Chart.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/d3/d3.v3.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/d3.patch.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/d3/queue.v1.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/d3/topojson.v1.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/function-plot.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/customcontrols/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/embed-tweet/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/chart/chart.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/chart/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/verticator/verticator.js"></script>
+
+<script src="libs/reveal.js/4.3.1/plugin/zoom/zoom.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/search/search.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/menu/menu.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/chalkboard/plugin.js"></script>
+
+<!--	<script src="libs/reveal.js/4.3.1/plugin/audio-slideshow/plugin.js"></script>  -->
+<!--	<script src="libs/reveal.js/4.3.1/plugin/audio-slideshow/recorder.js"></script>-->
+<!--	<script src="libs/reveal.js/4.3.1/plugin/audio-slideshow/RecordRTC.js"></script>-->
+
+  
+
+<script>
+  const printPlugins = [
+      RevealNotes,
+      RevealHighlight,
+      RevealMath.MathJax3,
+      RevealAnimate,
+      RevealChalkboard, 
+			RevealEmbedTweet,
+			RevealChart,
+		];
+
+		const plugins =  [...printPlugins,
+		RevealZoom, 
+		RevealSearch, 
+				RevealMarkdown, 
+				RevealMenu, 
+				RevealFullscreen,
+				RevealAnything,
+				//RevealAudioSlideshow,
+				//RevealAudioRecorder,
+				RevealCustomControls, 
+				// poll
+				// question
+				// seminar
+				Verticator 
+				 ]
+
+
+		// Also available as an ES module, see:
+		// https://revealjs.com/initialization/
+		Reveal.initialize({
+			controls: true,
+      controlsTutorial: true,
+      controlsLayout: 'bottom-right',
+      controlsBackArrows: 'faded',
+      progress: true,
+      slideNumber: false,
+      //#showSlideNumber "all" "print" "speaker"
+      hash: true, //# hash: false,
+      //# respondToHashChanges: true,
+      //# history: false,
+      keyboard: true,
+      //#keyboardCondition: null,
+      overview: true,
+      center: true,
+      touch: true,
+      loop: false,
+      rtl: false,
+      //#navigationMode: 'default', linear grid
+      shuffle: false,
+      fragments: true,
+      fragmentInURL: false,
+      embedded: false,
+      help: true,
+      //#pause: true
+      showNotes: false,
+      autoPlayMedia: false, // TODO fix this to a nullable value
+      //#preloadIframes: null. true false
+      //#autoAnimate: true
+      //#autoAnimateMatcher: null,
+      //#autoAnimateEasing: 'ease',
+      //autoAnimateDuration: 1.0,
+      //#autoAnimateUnmatched: true
+      //#autoAnimateStyles: []
+      autoSlide: 0, // TODO fix this to a falseable value
+      autoSlideStoppable: true,
+      autoSlideMethod: '0',
+      defaultTiming: 120,
+      mouseWheel: false,
+      //#previewLinks: false
+      //#postMessage: true, // TODO : this can cause issues with the vscode api ???
+      //#postMessageEvents: false,
+      //#focusBodyOnPageVisibilityChange: true,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      //#pdfMaxPagesPerSlide: Number.POSITIVE_INFINITY,
+      //#pdfSeparateFragments: true,
+      //#pdfPageHeightOffset: -1,
+      viewDistance: 3,
+      //#mobileViewDistance: 2,
+      display: 'block',
+      //#hideInactiveCursor: true,
+      //#hideCursorTime: 5000
+
+      // Parallax Background
+      parallaxBackgroundImage: '',
+      parallaxBackgroundSize: '',
+      parallaxBackgroundHorizontal: 0,
+      parallaxBackgroundVertical: 0,
+
+      //Presentation Size
+      width: 1450,
+			height: 1000,
+			margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2,
+      disableLayout: false,
+
+      audio: {
+        prefix: 'audio/', // audio files are stored in the "audio" folder
+        suffix: '.ogg', // audio files have the ".ogg" ending
+        textToSpeechURL: null, // the URL to the text to speech converter
+        defaultNotes: false, // use slide notes as default for the text to speech converter
+        defaultText: false, // use slide text as default for the text to speech converter
+        advance: 0, // advance to next slide after given time in milliseconds after audio has played, use negative value to not advance
+        autoplay: false, // automatically start slideshow
+        defaultDuration: 5, // default duration in seconds if no audio is available
+        defaultAudios: true, // try to play audios with names such as audio/1.2.ogg
+        playerOpacity: 0.05, // opacity value of audio player if unfocused
+        playerStyle: 'position: fixed; bottom: 4px; left: 25%; width: 50%; height:75px; z-index: 33;', // style used for container of audio controls
+        startAtFragment: false, // when moving to a slide, start at the current fragment or at the start of the slide
+      },
+      
+      chalkboard: { // font-awesome.min.css must be available
+        //src: "chalkboard/chalkboard.json",
+        storage: "chalkboard-demo",
+      },
+      
+			customcontrols: {
+					controls: [
+      						{
+						  id: 'toggle-overview',
+						  title: 'Toggle overview (O)',
+						  icon: '<i class="fa fa-th"></i>',
+						  action: 'Reveal.toggleOverview();'
+						}
+						,
+      {
+        icon: '<i class="fa fa-pen-square"></i>',
+        title: 'Toggle chalkboard (B)',
+        action: 'RevealChalkboard.toggleChalkboard();'
+      },
+      {
+        icon: '<i class="fa fa-pen"></i>',
+        title: 'Toggle notes canvas (C)',
+        action: 'RevealChalkboard.toggleNotesCanvas();'
+      }
+      
+				]
+			},
+			chart: {
+					defaults: { 
+						color: 'lightgray', // color of labels
+						scale: { 
+							beginAtZero: true, 
+							ticks: { stepSize: 1 },
+							grid: { color: "lightgray" } , // color of grid lines
+						},
+					},
+					line: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ], "borderDash": [ [5,10], [0,0] ] }, 
+					bar: { backgroundColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
+					pie: { backgroundColor: [ ["rgba(0,0,0,.8)" , "rgba(220,20,20,.8)", "rgba(20,220,20,.8)", "rgba(220,220,20,.8)", "rgba(20,20,220,.8)"] ]},
+					radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
+			},
+			math: {
+				mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+				config: 'TeX-AMS_HTML-full',
+				// pass other options into `MathJax.Hub.Config()`
+				TeX: { Macros: { RR: "{\\bf R}" } }
+				},
+				anything: [ 
+				{
+		className: "plot",
+		defaults: {width:500, height: 500, grid:true},
+		initialize: (function(container, options){ options.target = "#"+container.id; functionPlot(options) })
+	 },
+	 {
+		className: "chart",  
+		initialize: (function(container, options){ container.chart = new Chart(container.getContext("2d"), options);  })
+	 },
+	 {
+		className: "anything",
+		initialize: (function(container, options){ if (options && options.initialize) { options.initialize(container)} })
+	 },
+					],
+			// Learn about plugins: https://revealjs.com/plugins/
+			plugins: (window.location.search.match(/print-pdf/gi) ? printPlugins : plugins ) 
+		});
+			
+
+
+	    // Change chalkboard theme : 
+		function changeTheme(input) {
+			var config = {};
+			config.theme = input.value;
+			Reveal.getPlugin("RevealChalkboard").configure(config);
+			input.blur();
+		}
+
+		// // Handle the message inside the webview
+        // window.addEventListener('message', event => {
+
+        //     const message = event.data; // The JSON data our extension sent
+
+        //     switch (message.command) {
+        //         case 'refactor':
+        //             Reveal.toggleHelp();
+        //     }
+        // });
+
+		if (window.location.search.match(/print-pdf-now/gi)) {
+      		setTimeout(() => {
+				window.print();
+			  }, 2500);
+			
+    }
+</script>
+
+</body>
+
+</html>
