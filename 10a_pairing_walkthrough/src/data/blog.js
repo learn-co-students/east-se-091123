@@ -28,10 +28,10 @@ const blogData = {
     {
       id: 4,
       title: "The Cats Attack",
-      date: 'not 1970',
+      date: "not 1970",
       preview: "Rawrrr!",
       minutes: 93,
-    }
+    },
   ],
 };
 

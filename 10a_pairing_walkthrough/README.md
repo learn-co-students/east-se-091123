@@ -1,5 +1,3 @@
-
-
                                 <App />
                                /  |   \
                               /   |    \
@@ -9,21 +7,6 @@
                               <About />         \
                                                  \
                                             <Article />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # Putting it All Together: Components and Props
 
