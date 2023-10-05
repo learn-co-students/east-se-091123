@@ -14,11 +14,18 @@ function App() {
     setIsLight((currentState) => !currentState);
   }
 
+  function onNewProject(newProject) {
+    setProjects((currentStateProjects) => [
+      newProject,
+      ...currentStateProjects,
+    ]);
+  }
+
   const className = isLight ? "App light" : "App";
   return (
     <div className={className}>
       <Header isLight={isLight} onIsLightChange={onIsLightChange} />
-      <ProjectForm />
+      <ProjectForm onNewProject={onNewProject} />
       <ProjectList projects={projects} />
     </div>
   );
