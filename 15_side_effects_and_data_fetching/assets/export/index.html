@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>P2L5 - React Side Effects &amp; Data Fetching slides</title>
+
+  <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+  <meta name="author" content="Hakim El Hattab">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="libs/reveal.js/4.3.1/reset.css">
+  <link rel="stylesheet" href="libs/reveal.js/4.3.1/reveal.css">
+
+  <!-- highlight Theme -->
+  
+  <link rel="stylesheet" href="libs/highlight.js/11.3.1/styles/monokai.min.css">
+  
+	
+		
+	<link rel="stylesheet" href="libs/reveal.js/4.3.1/plugin/chalkboard/style.css">
+	
+	
+	
+  <link rel="stylesheet" href="libs/reveal.js/4.3.1/plugin/customcontrols/style.css">
+  
+	
+
+
+
+  <!-- Revealjs Theme -->
+  
+  <link rel="stylesheet" href="libs/reveal.js/4.3.1/theme/night.css" id="theme">
+  
+  
+
+  <link rel="stylesheet" href="libs/styles/tasklist.css">
+	<link rel="stylesheet" href="libs/styles/iota.css">
+	<link rel="stylesheet" href="libs/styles/layout.css">
+
+
+  <!-- Revealjs Theme -->
+  
+
+   <!-- css list -->
+	
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  
+
+   
+
+</head>
+
+<body>
+
+   
+
+  <div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+      
+
+
+    
+        <section >
+            
+            <h2>Side Effects and Data Fetching 💻</h2>
+
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h2>✅ Objectives</h2>
+<ul>
+<li>Observe how to send a POST request via form</li>
+<li>Explain what a side effect is</li>
+<li>Observe how React manages side effects with the useEffect hook</li>
+<li>Observe how to use the useEffect hook to fetch data on page load</li>
+<li>Review changing parent state</li>
+</ul>
+
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h4>Project Showcase Features</h4>
+<div style="font-size: 0.8em">
+<ul>
+<li>Persist projects to database upon submitting the ProjectForm</li>
+<li>Load all projects from db on component load</li>
+<li>Load all phase 4 projects from db when users click on the phase 4 button</li>
+<li>Load all matching projects from db by phase and value in the search input</li>
+<li>Bonus: Add debouncing to search input so our search input only triggers a single fetch request when we type (rather than sending one for each keystroke)</li>
+</ul>
+</div>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>Warmup</h3>
+<small>
+<p>Let’s head over to <code>src/components/ProjectForm.js</code> and add in persistence.</p>
+</small>
+<h4>Getting Started:</h4>
+<small>
+<ul>
+<li><code>cd 05_side_effects_and_data_fetching/project_showcase</code></li>
+<li><code>npm run server</code></li>
+<li>in another terminal: <code>npm install</code> then <code>npm start</code></li>
+</ul>
+<p>We want to be able to submit the form to create a new project, see the project appear in the DOM, reload the page and see it still appearing on the page!
+</small></p>
+
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>What to know before discussing side effects?</h3>
+<p><small>The React components we’ve seen so far are ‘pure functions’. This means that given an input(such as a props and state), the return is 100% predictable.</small></p>
+<pre><code class="language-js">function Greeting({ name }) {
+  return &lt;h1&gt;Hello, {name}&lt;/h1&gt;;
+};
+
+export default Greeting;
+</code></pre>
+<p><small>Any time Greeting is called, and provided a new prop, we will always be able to predict the output, regardless of the prop value</small></p>
+
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>What is a side effect?</h3>
+<small>
+<p class="fragment">"We perform a side effect when we need to reach outside of our React components to do something. Performing a side effect, however, will not give us a predictable result."<br/>
+https://www.freecodecamp.org/news/react-useeffect-absolute-beginners/</p>
+<p class="fragment">The term ‘side effect’ not only applies to React but to all functional programming.</p>
+<p class="fragment">“A side effect is anything that affects something outside the scope of the function being executed ” - Michael W. Brady</p>
+<p class="fragment">💡 These are operations that will still have an effect on our component, but won’t happen during the rendering process (they’ll happen after)</p>
+</small>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <img src="./react-component-lifecycle.png" alt="React component lifecycle diagram" style="height: 65vh;" />
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>Examples of side effects</h3>
+<ul>
+<li class="fragment">
+<p>Fetching Data from a server</p>
+</li>
+<li class="fragment">
+<p>Interacting with a browser API like the <code>document</code> or <code>window</code></p>
+<ul>
+<li class="fragment">Utilizing interval timers such as <code>setInterval</code> or <code>setTimeout</code></li>
+<li class="fragment">adding a <code>mousemove</code> event listener to the <code>window</code> object</li>
+</ul>
+</li>
+</ul>
+
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>🛠️ useEffect() hook</h3>
+<div style="font-size: 0.7em">
+<ul>
+<li>
+<p><code>useEffect()</code> runs after the first render and then after every subsequent re-render.</p>
+</li>
+<li class="fragment">
+<p>Takes in two arguments:</p>
+<ul>
+<li class="fragment">
+<p>A callback function defining the logic to be executed as a side effect(the ‘effect’)</p>
+</li>
+<li class="fragment">
+<p>A dependency array that defines when the side effect should occur. This argument is optional and does not always need to be provided</p>
+</li>
+<li class="fragment">
+<p>The dependency array allows us to limit when the effect will run again by specifying the values for props, state, etc. on which this effect depends</p>
+</li>
+</ul>
+</li>
+<li class="fragment">
+<p><code>useEffect()</code> is essentially telling React that the component needs to do something else AFTER the component has rendered</p>
+</li>
+</ul>
+</div>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h4>💡 In a Nutshell 💡</h4>
+<p>useEffect synchronizes a side effect with a react component’s rendering.</p>
+
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>1️⃣ useEffect() hook without a dependency array</h3>
+<pre><code class="language-js">useEffect(() =&gt; {
+  // Some effect to occur
+});
+</code></pre>
+<div style="font-size: 0.8em">
+<ul>
+<li class="fragment">
+<p>In this example, only 1 argument is passed to useEffect</p>
+</li>
+<li class="fragment">
+<p>The dependency array is omitted</p>
+</li>
+<li class="fragment">
+<p>This side effect will synchronize with all renders</p>
+</li>
+</ul>
+</div>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>2️⃣ useEffect() hook with an empty dependency array</h3>
+<pre><code class="language-js">useEffect(() =&gt; {
+  // Some effect to occur
+}, []);
+</code></pre>
+<div style="font-size: 0.8em">
+<ul>
+<li class="fragment">
+<p>In this example, the dependency array is passed as the second argument</p>
+</li>
+<li class="fragment">
+<p>The dependency array is empty with no provided values</p>
+</li>
+<li class="fragment">
+<p>That means that the side effect will only run one time, upon the initial render of the component. It does not synchronize with any props or state.</p>
+</li>
+</ul>
+</div>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h4>3️⃣ useEffect() hook with a value provided to the dependency array</h4>
+<pre><code class="language-js">useEffect(() =&gt; {
+  // Some effect to occur
+}, [data]);
+</code></pre>
+<div style="font-size: 0.65em">
+<ul>
+<li class="fragment">
+<p>In this example, the dependency array is passed a piece of data. This data can be any object or function from elsewhere in our React code that we use within the side effect function.</p>
+</li>
+<li class="fragment">
+<p>That means that the side effect will run once upon the component’s initial render and then after any render where one of the dependencies changed.</p>
+</li>
+<li class="fragment">
+<p>We need to:</p>
+<ul>
+<li class="fragment">✅ make sure that the projects we fetch from the database align with the phase we have selected by clicking one of the phase button filters</li>
+<li class="fragment">✅ rework the search input so it makes calls to our api when we type in the input rather than filtering through local state in react</li>
+</ul>
+</li>
+</ul>
+</div>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>Cleaning up 🧹</h3>
+<div style="font-size: 0.7em">
+<ul>
+<li>
+<p>There will be some code that is necessary to clean up after the component is no longer being mounted on the DOM. AKA turning off our side effects</p>
+</li>
+<li class="fragment">
+<p>Why? To avoid ‘memory leaks’ which means using memory for data that is no longer necessary</p>
+</li>
+<li class="fragment">
+<p>Examples: Timeouts, subscriptions, event listeners added to the window</p>
+</li>
+<li class="fragment">
+<p>How? Return a cleanup function from the useEffect callback!</p>
+</li>
+</ul>
+</div>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>Cleanup example</h3>
+<pre><code class="language-js">function Timer() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() =&gt; {
+    let timer = setInterval(() =&gt; {
+      setCount((count) =&gt; count + 1);
+    }, 1000);
+
+    return () =&gt; clearInterval(timer);
+  }, []);
+
+  return &lt;h1&gt;I've rendered {count} times!&lt;/h1&gt;;
+};
+</code></pre>
+<p><a href="https://codesandbox.io/s/useeffect-cleanup-ig17kd?file=/src/Timer.js" target="blank" rel="noreferrer">Codesandbox Example</a></p>
+
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>When does cleanup happen?</h3>
+<small>
+<ul>
+<li>
+<p>During an update, if the side effect function will run again on this re-render, then the cleanup function will run first before the effect happens again.</p>
+</li>
+<li>
+<p>When the component unmounts (is removed from the DOM)</p>
+</li>
+</ul>
+</small>
+  <img src="./react-component-lifecycle.png" alt="React component lifecycle diagram" style="height: 40vh" />
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <div style="font-size: 0.8em">
+  <div style="text-align: left">
+<p><strong>NOTE:</strong> In Development when using React <code>StrictMode</code> (which we are):</div></p>
+<ul>
+<li class="fragment">components will be double rendered when they first mount to help you spot errors more easily</li>
+<li class="fragment">the component will go through a mount and update right away</li>
+<li class="fragment">In the codesandbox demo, I removed Strict Mode so we can more easily understand what’s happening with the cleanup.</li>
+<li class="fragment">In your own development it may seem like the cleanup function is running right when the component loads. The double render from StrictMode is the reason.</li>
+</ul>
+</div>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>Debouncing</h3>
+<div style="font-size: 0.7em">
+<h4>The problem</h4>
+<ul>
+<li>Right now a separate fetch request is sent to the server for every character we type into the search input - this causes janky rendering and multiple unnecessary repaints of the ProjectList component</li>
+</ul>
+<h4>The solution</h4>
+<ul>
+<li class="fragment">Debounce the search input!
+<ul>
+<li class="fragment">use a separate piece of state to manage the search input</li>
+<li class="fragment">when that piece of state changes, schedule a change to the state variable that will trigger the fetch request for 300 milliseconds in the future</li>
+<li class="fragment">cancel the previously scheduled update to that state variable</li>
+</ul>
+</li>
+</ul>
+</div>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <img src="./cleanup-diagram-1.drawio.svg" style="height: 75vh" />
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <img src="./cleanup-diagram-2.drawio.svg" style="height: 75vh" />
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <img src="./cleanup-diagram-3.drawio.svg" style="height: 75vh" />
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <img src="./cleanup-diagram-4.drawio.svg" style="height: 75vh" />
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <img src="./cleanup-diagram-5.drawio.svg" style="height: 75vh" />
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <img src="./cleanup-diagram-6.drawio.svg" style="height: 75vh" />
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <h3>💡 Conclusion</h3>
+<div style="font-size: 0.8em">
+<ul>
+<li>Side effects run after first render</li>
+<li class="fragment">Side effects run after every subsequent render where one of the values in their dependency array changes</li>
+<li class="fragment">Any time a side effect function refers to a value in state or props, that value should be included in its dependency array (follow the eslint hints in your editor)</li>
+<li class="fragment">If your side effect interacts with an external API or a native browser API like <code>setInterval</code> or <code>setTimeout</code> make sure to return a cleanup function to avoid memory leaks</li>
+<li class="fragment">useEffect with an empty dependency array is your go to tool for fetching data when a component first loads</li>
+</ul>
+</div>
+            </section>
+    
+
+
+
+    
+        <section >
+            
+            <img src="./component-lifecycle.drawio.svg" style="height: 55vh" />
+            </section>
+    
+
+
+    </div>
+
+
+  </div>
+
+  <div class="line top"></div>
+  <div class="line bottom"></div>
+  <div class="line left"></div>
+  <div class="line right"></div>
+
+  <script src="libs/reveal.js/4.3.1/reveal.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/notes/notes.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/markdown/markdown.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/highlight/highlight.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/math/math.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/fullscreen/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/animate/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/animate/svg.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/Chart.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/d3/d3.v3.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/d3.patch.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/d3/queue.v1.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/d3/topojson.v1.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/function-plot.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/customcontrols/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/embed-tweet/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/chart/chart.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/chart/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/verticator/verticator.js"></script>
+
+<script src="libs/reveal.js/4.3.1/plugin/zoom/zoom.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/search/search.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/menu/menu.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/chalkboard/plugin.js"></script>
+
+<!--	<script src="libs/reveal.js/4.3.1/plugin/audio-slideshow/plugin.js"></script>  -->
+<!--	<script src="libs/reveal.js/4.3.1/plugin/audio-slideshow/recorder.js"></script>-->
+<!--	<script src="libs/reveal.js/4.3.1/plugin/audio-slideshow/RecordRTC.js"></script>-->
+
+  
+
+<script>
+  const printPlugins = [
+      RevealNotes,
+      RevealHighlight,
+      RevealMath.MathJax3,
+      RevealAnimate,
+      RevealChalkboard, 
+			RevealEmbedTweet,
+			RevealChart,
+		];
+
+		const plugins =  [...printPlugins,
+		RevealZoom, 
+		RevealSearch, 
+				RevealMarkdown, 
+				RevealMenu, 
+				RevealFullscreen,
+				RevealAnything,
+				//RevealAudioSlideshow,
+				//RevealAudioRecorder,
+				RevealCustomControls, 
+				// poll
+				// question
+				// seminar
+				Verticator 
+				 ]
+
+
+		// Also available as an ES module, see:
+		// https://revealjs.com/initialization/
+		Reveal.initialize({
+			controls: true,
+      controlsTutorial: true,
+      controlsLayout: 'bottom-right',
+      controlsBackArrows: 'faded',
+      progress: true,
+      slideNumber: false,
+      //#showSlideNumber "all" "print" "speaker"
+      hash: true, //# hash: false,
+      //# respondToHashChanges: true,
+      //# history: false,
+      keyboard: true,
+      //#keyboardCondition: null,
+      overview: true,
+      center: true,
+      touch: true,
+      loop: false,
+      rtl: false,
+      //#navigationMode: 'default', linear grid
+      shuffle: false,
+      fragments: true,
+      fragmentInURL: false,
+      embedded: false,
+      help: true,
+      //#pause: true
+      showNotes: false,
+      autoPlayMedia: false, // TODO fix this to a nullable value
+      //#preloadIframes: null. true false
+      //#autoAnimate: true
+      //#autoAnimateMatcher: null,
+      //#autoAnimateEasing: 'ease',
+      //autoAnimateDuration: 1.0,
+      //#autoAnimateUnmatched: true
+      //#autoAnimateStyles: []
+      autoSlide: 0, // TODO fix this to a falseable value
+      autoSlideStoppable: true,
+      autoSlideMethod: '0',
+      defaultTiming: 120,
+      mouseWheel: false,
+      //#previewLinks: false
+      //#postMessage: true, // TODO : this can cause issues with the vscode api ???
+      //#postMessageEvents: false,
+      //#focusBodyOnPageVisibilityChange: true,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      //#pdfMaxPagesPerSlide: Number.POSITIVE_INFINITY,
+      //#pdfSeparateFragments: true,
+      //#pdfPageHeightOffset: -1,
+      viewDistance: 3,
+      //#mobileViewDistance: 2,
+      display: 'block',
+      //#hideInactiveCursor: true,
+      //#hideCursorTime: 5000
+
+      // Parallax Background
+      parallaxBackgroundImage: '',
+      parallaxBackgroundSize: '',
+      parallaxBackgroundHorizontal: 0,
+      parallaxBackgroundVertical: 0,
+
+      //Presentation Size
+      width: 960,
+			height: 800,
+			margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2,
+      disableLayout: false,
+
+      audio: {
+        prefix: 'audio/', // audio files are stored in the "audio" folder
+        suffix: '.ogg', // audio files have the ".ogg" ending
+        textToSpeechURL: null, // the URL to the text to speech converter
+        defaultNotes: false, // use slide notes as default for the text to speech converter
+        defaultText: false, // use slide text as default for the text to speech converter
+        advance: 0, // advance to next slide after given time in milliseconds after audio has played, use negative value to not advance
+        autoplay: false, // automatically start slideshow
+        defaultDuration: 5, // default duration in seconds if no audio is available
+        defaultAudios: true, // try to play audios with names such as audio/1.2.ogg
+        playerOpacity: 0.05, // opacity value of audio player if unfocused
+        playerStyle: 'position: fixed; bottom: 4px; left: 25%; width: 50%; height:75px; z-index: 33;', // style used for container of audio controls
+        startAtFragment: false, // when moving to a slide, start at the current fragment or at the start of the slide
+      },
+      
+      chalkboard: { // font-awesome.min.css must be available
+        //src: "chalkboard/chalkboard.json",
+        storage: "chalkboard-demo",
+      },
+      
+			customcontrols: {
+					controls: [
+      						{
+						  id: 'toggle-overview',
+						  title: 'Toggle overview (O)',
+						  icon: '<i class="fa fa-th"></i>',
+						  action: 'Reveal.toggleOverview();'
+						}
+						,
+      {
+        icon: '<i class="fa fa-pen-square"></i>',
+        title: 'Toggle chalkboard (B)',
+        action: 'RevealChalkboard.toggleChalkboard();'
+      },
+      {
+        icon: '<i class="fa fa-pen"></i>',
+        title: 'Toggle notes canvas (C)',
+        action: 'RevealChalkboard.toggleNotesCanvas();'
+      }
+      
+				]
+			},
+			chart: {
+					defaults: { 
+						color: 'lightgray', // color of labels
+						scale: { 
+							beginAtZero: true, 
+							ticks: { stepSize: 1 },
+							grid: { color: "lightgray" } , // color of grid lines
+						},
+					},
+					line: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ], "borderDash": [ [5,10], [0,0] ] }, 
+					bar: { backgroundColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
+					pie: { backgroundColor: [ ["rgba(0,0,0,.8)" , "rgba(220,20,20,.8)", "rgba(20,220,20,.8)", "rgba(220,220,20,.8)", "rgba(20,20,220,.8)"] ]},
+					radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
+			},
+			math: {
+				mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+				config: 'TeX-AMS_HTML-full',
+				// pass other options into `MathJax.Hub.Config()`
+				TeX: { Macros: { RR: "{\\bf R}" } }
+				},
+				anything: [ 
+				{
+		className: "plot",
+		defaults: {width:500, height: 500, grid:true},
+		initialize: (function(container, options){ options.target = "#"+container.id; functionPlot(options) })
+	 },
+	 {
+		className: "chart",  
+		initialize: (function(container, options){ container.chart = new Chart(container.getContext("2d"), options);  })
+	 },
+	 {
+		className: "anything",
+		initialize: (function(container, options){ if (options && options.initialize) { options.initialize(container)} })
+	 },
+					],
+			// Learn about plugins: https://revealjs.com/plugins/
+			plugins: (window.location.search.match(/print-pdf/gi) ? printPlugins : plugins ) 
+		});
+			
+
+
+	    // Change chalkboard theme : 
+		function changeTheme(input) {
+			var config = {};
+			config.theme = input.value;
+			Reveal.getPlugin("RevealChalkboard").configure(config);
+			input.blur();
+		}
+
+		// // Handle the message inside the webview
+        // window.addEventListener('message', event => {
+
+        //     const message = event.data; // The JSON data our extension sent
+
+        //     switch (message.command) {
+        //         case 'refactor':
+        //             Reveal.toggleHelp();
+        //     }
+        // });
+
+		if (window.location.search.match(/print-pdf-now/gi)) {
+      		setTimeout(() => {
+				window.print();
+			  }, 2500);
+			
+    }
+</script>
+
+</body>
+
+</html>
