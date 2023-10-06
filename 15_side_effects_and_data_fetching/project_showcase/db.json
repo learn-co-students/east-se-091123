@@ -1,0 +1,28 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "name": "Great Outdoors Guide",
+      "about": "Plan your next adventure to in the U.S. National Parks!",
+      "phase": 4,
+      "link": "https://great-outdoors-guide.netlify.app",
+      "image": "https://i.imgur.com/8GnP2Uw.png"
+    },
+    {
+      "id": 2,
+      "name": "Book Her",
+      "about": "The app takes you (the Casting Director) through a series of questions to determine the Models you need for your next Project.",
+      "phase": 4,
+      "link": "https://bookher.netlify.app/new_project",
+      "image": "https://i.imgur.com/INs84Uk.png"
+    },
+    {
+      "name": "Code Bucket",
+      "about": "Web-based CSS, JS and HTML Editor",
+      "phase": "4",
+      "link": "https://code-bucket.netlify.app",
+      "image": "https://i.imgur.com/Hz84TA2.png",
+      "id": 3
+    }
+  ]
+}

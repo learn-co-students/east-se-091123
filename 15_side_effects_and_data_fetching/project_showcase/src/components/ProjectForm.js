@@ -26,14 +26,18 @@ function ProjectForm({ onNewProject }) {
   function handleSubmit(event) {
     event.preventDefault();
 
-    const project = {
-      ...formData,
-      id: Math.floor(Math.random() * 100),
-    };
-    // // make post request to server
-    onNewProject(project);
-
-    setFormData(initialState);
+    fetch("http://localhost:3000/projects", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => response.json())
+      .then((newProject) => {
+        onNewProject(newProject);
+        setFormData(initialState);
+      });
   }
 
   return (
