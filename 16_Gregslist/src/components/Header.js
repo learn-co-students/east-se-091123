@@ -10,7 +10,7 @@ function Header({ updateSearch }) {
         </span>
         gregslist
       </h1>
-      <Search updateSearch={ updateSearch } />
+      <Search updateSearch={updateSearch} />
     </header>
   );
 }
