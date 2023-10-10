@@ -1,14 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Header from "./components/Header";
 import ProjectForm from "./components/ProjectForm";
 import ProjectList from "./components/ProjectList";
 
-import projectData from "./projects";
-
 function App() {
   const [isLight, setIsLight] = useState(false);
-  const [projects, setProjects] = useState(projectData);
+  const [projects, setProjects] = useState([]);
+
+  const getProjects = () => {
+    fetch("http://localhost:3000/projects")
+      .then((resp) => resp.json())
+      .then((data) => setProjects(data));
+  };
+
+  useEffect(getProjects, []);
 
   function onIsLightChange() {
     setIsLight((currentState) => !currentState);

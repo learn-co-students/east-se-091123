@@ -1,13 +1,13 @@
 import React from "react";
+import { FaTrash } from "react-icons/fa";
 
 function Card({ project }) {
-  const { name, image, link, phase, about } = project;
+  const { name, image, link, phase, about, claps } = project;
 
   return (
     <li className="card">
       <figure className="image">
         <img src={image} alt={name} />
-        <button className="claps">👏{0} </button>
       </figure>
 
       <section className="details">
@@ -22,6 +22,12 @@ function Card({ project }) {
 
       <footer className="extra">
         <span className="badge blue"> Phase {phase} </span>
+        <div className="manage">
+          <button>👏 {claps} </button>
+          <button>
+            <FaTrash />
+          </button>
+        </div>
       </footer>
     </li>
   );
