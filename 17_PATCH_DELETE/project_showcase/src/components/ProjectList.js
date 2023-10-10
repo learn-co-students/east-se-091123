@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import Card from "./Card";
 
-function ProjectList({ projects }) {
+function ProjectList({ projects, onRemoveProject, onUpdateProject }) {
   const [search, setSearch] = useState("");
 
   function handleSearchChange(event) {
@@ -17,7 +17,14 @@ function ProjectList({ projects }) {
   });
 
   const renderProjects = filteredProjects.map((project) => {
-    return <Card key={project.id} project={project} />;
+    return (
+      <Card
+        key={project.id}
+        project={project}
+        onRemoveProject={onRemoveProject}
+        onUpdateProject={onUpdateProject}
+      />
+    );
   });
 
   return (

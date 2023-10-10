@@ -1,8 +1,31 @@
 import React from "react";
 import { FaTrash } from "react-icons/fa";
 
-function Card({ project }) {
-  const { name, image, link, phase, about, claps } = project;
+function Card({ project, onRemoveProject, onUpdateProject }) {
+  const { id, name, image, link, phase, about, claps } = project;
+
+  function handleDelete() {
+    // make request to the "/projects/:id"
+    fetch(`http://localhost:3000/projects/${id}`, {
+      method: "DELETE",
+    }).then((resp) => {
+      if (resp.ok) {
+        onRemoveProject(id);
+      }
+    });
+  }
+
+  function handleUpdate() {
+    fetch(`http://localhost:3000/projects/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ claps: claps + 1 }),
+    })
+      .then((resp) => resp.json())
+      .then((updatedProject) => onUpdateProject(updatedProject));
+  }
 
   return (
     <li className="card">
@@ -23,8 +46,8 @@ function Card({ project }) {
       <footer className="extra">
         <span className="badge blue"> Phase {phase} </span>
         <div className="manage">
-          <button>👏 {claps} </button>
-          <button>
+          <button onClick={handleUpdate}>👏 {claps} </button>
+          <button onClick={handleDelete}>
             <FaTrash />
           </button>
         </div>
