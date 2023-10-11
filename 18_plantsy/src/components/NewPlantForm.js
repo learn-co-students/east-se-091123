@@ -1,37 +1,48 @@
 import React, { useState } from "react";
 
+const initialState = {
+  name: "",
+  image: "",
+  price: 0,
+};
+
 function NewPlantForm({ onNewPlant }) {
-  const [name, setName] = useState("");
-  const [image, setImage] = useState("");
-  const [price, setPrice] = useState(0);
+  // const [name, setName] = useState("");
+  // const [image, setImage] = useState("");
+  // const [price, setPrice] = useState(0);
+  const [formData, setFormData] = useState(initialState);
+  const { name, image, price } = formData;
 
-  function handleNameChange(event) {
-    setName(event.target.value);
-  }
+  // function handleNameChange(event) {
+  //   setName(event.target.value);
+  // }
 
-  function handleImageChange(event) {
-    setImage(event.target.value);
-  }
+  // function handleImageChange(event) {
+  //   setImage(event.target.value);
+  // }
 
-  function handlePriceChange(event) {
-    setPrice(event.target.value);
+  // function handlePriceChange(event) {
+  //   setPrice(event.target.value);
+  // }
+
+  function handleChange(event) {
+    setFormData((currentFormData) => {
+      return {
+        ...currentFormData,
+        [event.target.name]: event.target.value,
+      };
+    });
   }
 
   function handleSubmit(event) {
     event.preventDefault();
-
-    const newPlant = {
-      name,
-      image,
-      price: price,
-    };
 
     fetch("http://localhost:6001/plants", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newPlant),
+      body: JSON.stringify(formData),
     })
       .then((resp) => {
         if (resp.ok) {
@@ -42,9 +53,10 @@ function NewPlantForm({ onNewPlant }) {
       })
       .then((newPlantFromServer) => {
         onNewPlant(newPlantFromServer);
-        setName("");
-        setImage("");
-        setPrice(0);
+        // setName("");
+        // setImage("");
+        // setPrice(0);
+        setFormData(initialState);
       })
       .catch(console.log);
   }
@@ -58,14 +70,14 @@ function NewPlantForm({ onNewPlant }) {
           name="name"
           placeholder="Plant name"
           value={name}
-          onChange={handleNameChange}
+          onChange={handleChange}
         />
         <input
           type="text"
           name="image"
           placeholder="Image URL"
           value={image}
-          onChange={handleImageChange}
+          onChange={handleChange}
         />
         <input
           type="number"
@@ -73,7 +85,7 @@ function NewPlantForm({ onNewPlant }) {
           step="0.01"
           placeholder="Price"
           value={price}
-          onChange={handlePriceChange}
+          onChange={handleChange}
         />
         <button type="submit">Add Plant</button>
       </form>

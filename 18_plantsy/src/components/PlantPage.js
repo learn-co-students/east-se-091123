@@ -17,8 +17,26 @@ function PlantPage() {
     setPlants((currentPlants) => [...currentPlants, newPlant]);
   }
 
+  function onPlantUpdate(updatedPlant) {
+    setPlants((currentPlants) =>
+      currentPlants.map((plant) => {
+        if (plant.id === updatedPlant.id) {
+          return updatedPlant;
+        } else {
+          return plant;
+        }
+      })
+    );
+  }
+
   function onSearch(searchString) {
     setSearchTerm(searchString);
+  }
+
+  function onDeletePlant(plantId) {
+    setPlants((currentPlants) =>
+      currentPlants.filter((plant) => plant.id !== plantId)
+    );
   }
 
   const filterPlants = plants.filter((plant) => {
@@ -31,7 +49,11 @@ function PlantPage() {
     <main>
       <NewPlantForm onNewPlant={onNewPlant} />
       <Search onSearch={onSearch} />
-      <PlantList plants={filterPlants} />
+      <PlantList
+        plants={filterPlants}
+        onPlantUpdate={onPlantUpdate}
+        onDeletePlant={onDeletePlant}
+      />
     </main>
   );
 }
