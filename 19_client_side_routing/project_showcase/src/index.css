@@ -132,6 +132,20 @@ nav {
   align-content: center;
 }
 
+.nav-link{
+  display: inline-block;
+  box-sizing: border-box;
+  margin: .5rem;
+  padding: 5px;
+  text-decoration: none;
+  text-align: center;
+  font-size: min(10vw, 15px) ;
+}
+
+.active {
+  color: red;
+}
+
 /* forms */
 .form {
   display: flex;

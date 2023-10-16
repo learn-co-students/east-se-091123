@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Outlet } from "react-router-dom";
 
 import Header from "./components/Header";
-import ProjectForm from "./components/ProjectForm";
-import ProjectList from "./components/ProjectList";
+// import ProjectForm from "./components/ProjectForm";
+// import ProjectList from "./components/ProjectList";
 
 function App() {
   const [isLight, setIsLight] = useState(false);
@@ -45,16 +46,24 @@ function App() {
     });
   }
 
+  const context = {
+    projects,
+    onRemoveProject,
+    onUpdateProject,
+    onNewProject: onNewProject,
+  };
+
   const className = isLight ? "App light" : "App";
   return (
     <div className={className}>
       <Header isLight={isLight} onIsLightChange={onIsLightChange} />
-      <ProjectForm onNewProject={onNewProject} />
+      {/* <ProjectForm onNewProject={onNewProject} />
       <ProjectList
         projects={projects}
         onRemoveProject={onRemoveProject}
         onUpdateProject={onUpdateProject}
-      />
+      /> */}
+      <Outlet context={context} />
     </div>
   );
 }

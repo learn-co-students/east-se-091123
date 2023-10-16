@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 function Header({ isLight, onIsLightChange }) {
   const renderButtonText = isLight ? "Dark Mode" : "Light Mode";
 
@@ -12,6 +14,12 @@ function Header({ isLight, onIsLightChange }) {
         Project Showcase
       </h1>
       <nav>
+        <NavLink to="/projects" end className="nav-link">
+          projects
+        </NavLink>
+        <NavLink to="/projects/new" className="nav-link">
+          new project
+        </NavLink>
         <button onClick={handleButtonClick}> {renderButtonText} </button>
       </nav>
     </header>

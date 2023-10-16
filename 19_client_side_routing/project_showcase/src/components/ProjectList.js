@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 
 import Card from "./Card";
 
-function ProjectList({ projects, onRemoveProject, onUpdateProject }) {
+function ProjectList() {
+  const { projects, onRemoveProject, onUpdateProject } = useOutletContext();
   const [search, setSearch] = useState("");
 
   function handleSearchChange(event) {

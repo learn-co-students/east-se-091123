@@ -1,8 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
 
 function Card({ project, onRemoveProject, onUpdateProject }) {
   const { id, name, image, link, phase, about, claps } = project;
+  const navigate = useNavigate();
 
   function handleDelete() {
     // make request to the "/projects/:id"
@@ -27,9 +29,13 @@ function Card({ project, onRemoveProject, onUpdateProject }) {
       .then((updatedProject) => onUpdateProject(updatedProject));
   }
 
+  function handleImageClick() {
+    navigate(`/projects/${id}`);
+  }
+
   return (
     <li className="card">
-      <figure className="image">
+      <figure className="image" onClick={handleImageClick}>
         <img src={image} alt={name} />
       </figure>
 

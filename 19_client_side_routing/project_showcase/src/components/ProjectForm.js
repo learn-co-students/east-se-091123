@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useOutletContext, useNavigate } from "react-router-dom";
 
 const initialState = {
   name: "",
@@ -8,9 +9,11 @@ const initialState = {
   image: "",
 };
 
-function ProjectForm({ onNewProject }) {
+function ProjectForm() {
+  const { onNewProject } = useOutletContext();
   const [formData, setFormData] = useState(initialState);
   const { name, phase, about, link, image } = formData;
+  const navigate = useNavigate();
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -37,6 +40,7 @@ function ProjectForm({ onNewProject }) {
       .then((newProject) => {
         onNewProject(newProject);
         setFormData(initialState);
+        navigate("/projects");
       });
   }
 
