@@ -27,12 +27,34 @@ function App() {
     ]);
   }
 
+  function onRemoveProject(projectId) {
+    setProjects((currentProjects) => {
+      return currentProjects.filter((project) => project.id !== projectId);
+    });
+  }
+
+  function onUpdateProject(updatedProject) {
+    setProjects((currentProjects) => {
+      return currentProjects.map((project) => {
+        if (project.id === updatedProject.id) {
+          return updatedProject;
+        } else {
+          return project;
+        }
+      });
+    });
+  }
+
   const className = isLight ? "App light" : "App";
   return (
     <div className={className}>
       <Header isLight={isLight} onIsLightChange={onIsLightChange} />
       <ProjectForm onNewProject={onNewProject} />
-      <ProjectList projects={projects} />
+      <ProjectList
+        projects={projects}
+        onRemoveProject={onRemoveProject}
+        onUpdateProject={onUpdateProject}
+      />
     </div>
   );
 }
