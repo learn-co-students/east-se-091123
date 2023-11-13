@@ -16,3 +16,7 @@
 - Web Servers
 - Creating a Flask Application
 - Flask Routing and Views
+
+## Resources
+- [slides](https://docs.google.com/presentation/d/1P-LeTwkOzlxJLuRR-LZ_ju0dJkUKYHXNd1lit4az8vo/edit#slide=id.p)
+- [Flask docs](https://flask.palletsprojects.com/en/3.0.x/)
