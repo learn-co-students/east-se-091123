@@ -21,6 +21,7 @@ class PostById(Resource):
         db.session.delete( post )
         db.session.commit()
         return make_response( '', 204 )
+api.add_resource(PostById, '/posts/<int:id>')
 
 class PostComments(Resource):
     def get(self, post_id):
@@ -28,7 +29,7 @@ class PostComments(Resource):
         if not post:
             return make_response( { 'error': 'post not found' }, 404 )
         # need to get the post's comments and serialize them
-        comments = []
+        comments = [comment.to_dict() for comment in post.comments]
         return make_response( comments, 200 )
 
 api.add_resource(PostComments, '/posts/<int:post_id>/comments')
