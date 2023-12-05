@@ -1,12 +1,14 @@
-import { Button, FormControl, InputLabel, TextField } from '@mui/material';
+import { useState } from 'react'
+import { Box, Button, TextField } from '@mui/material';
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 function Signup({ setUser }) {
+    const [signup, setSignup] = useState(true)
 
     const signupSchema = yup.object().shape({
         username: yup.string().min(5, 'Too Short!').max(15, 'Too Long!').required('Required!'),
-        email: yup.string().email('Invalid email').required('Required'),
+        email: yup.string().email('Invalid email'),
         password: yup.string().min(5, 'Too Short!').max(15, 'Too Long!').required('Required!')
     })
 
@@ -18,7 +20,8 @@ function Signup({ setUser }) {
         },
         validationSchema: signupSchema,
         onSubmit: (values) => {
-            fetch('/users', {
+            const endpoint = signup ? '/users' : '/login'
+            fetch(endpoint, {
                 method: 'POST',
                 headers: {
                     "Content-Type": 'application/json'
@@ -30,7 +33,7 @@ function Signup({ setUser }) {
                         setUser(user)
                         // navigate into site
                     })
-                } else {
+                } else { 
                     
                     console.log('errors? handle them')
                 }
@@ -38,10 +41,14 @@ function Signup({ setUser }) {
         }
     })
 
+    function toggleSignup() {
+        setSignup((currentSignup) => !currentSignup)
+    }
+
     return (
-        <div>
+        <Box>
             {/* {formik.errors} */}
-     
+            <Button onClick={toggleSignup}>{signup ? 'Login instead!' : 'Register for an account'}</Button>
             <form onSubmit={formik.handleSubmit}>
                 <TextField 
                     id="username" 
@@ -52,14 +59,14 @@ function Signup({ setUser }) {
                     onChange={formik.handleChange}
                 />
             
-                <TextField 
+                {signup && <TextField 
                     id="email"
                     label="email"
                     variant="outlined" 
                     required
                     value={formik.values.email}
                     onChange={formik.handleChange}
-                />
+                />}
                 <TextField 
                     id="password"
                     label="password"
@@ -71,7 +78,7 @@ function Signup({ setUser }) {
                 />
                 <Button variant="contained" type="submit">Submit</Button>
             </form>
-        </div>
+        </Box>
     )
 }
 

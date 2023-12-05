@@ -30,3 +30,7 @@ api = Api(app)
 bcrypt = Bcrypt(app)
 # Instantiate CORS
 CORS(app)
+
+# Set up:
+# generate a secrete key `python -c 'import os; print(os.urandom(16))'`
+app.secret_key = b'\xd9{\xc7\xc5\xe0\xdd\xde\xb3\xc0\x89\xfd|\x17]\xf6p'
