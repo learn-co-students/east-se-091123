@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, Container, TextField } from '@mui/material';
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
@@ -10,7 +10,7 @@ function Signup({ setUser }) {
         username: yup.string().min(5, 'Username too Short!').max(15, 'Username too Long!'),
         email: yup.string().email('Invalid email'),
         password: yup.string().min(5, 'Password too Short!').max(15, 'Password too Long!'),
-        passwordConfirmation: yup.string().required('Confirm Password').oneOf([yup.ref('password')], 'Passwords must match')
+        passwordConfirmation: yup.string().oneOf([yup.ref('password')], 'Passwords must match')
     })
     const loginSchema = yup.object().shape({
         username: yup.string().required('username required'),
@@ -51,59 +51,64 @@ function Signup({ setUser }) {
         setSignup((currentSignup) => !currentSignup)
     }
 
-    console.log(formik.errors)
-
     return (
-        <Box>
+        <Container maxWidth='sm'>
             {/* { Object.keys(formik.errors).map((key) => <li>{formik.errors[key]}</li>) } */}
             <Button onClick={toggleSignup}>{signup ? 'Login instead!' : 'Register for an account'}</Button>
             <form onSubmit={formik.handleSubmit}>
-                <TextField 
-                    id="username" 
-                    label="Username" 
-                    variant="outlined" 
-                    error={!!formik.errors.username}
-                    required
-                    value={formik.values.username}
-                    onChange={formik.handleChange}
-                />
-                {formik.errors.username && <li>{formik.errors.username}</li>}
-                {signup && <TextField 
-                    id="email"
-                    label="email"
-                    variant="outlined" 
-                    error={!!formik.errors.email}
-                    required
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                />}
-                 {formik.errors.email && <li>{formik.errors.email}</li>}
-                <TextField 
-                    id="password"
-                    label="password"
-                    type="text"
-                    variant="outlined" 
-                    error={!!formik.errors.password}
-                    required
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                />
-                 {formik.errors.password && <li>{formik.errors.password}</li>}
-                {signup && <TextField 
-                    id="passwordConfirmation"
-                    label="passwordConfirmation"
-                    type="text"
-                    variant="outlined" 
-                    error={!!formik.errors.passwordConfirmation}
-                    required
-                    value={formik.values.passwordConfirmation}
-                    onChange={formik.handleChange}
-                />}
-                { formik.errors.passwordConfirmation && <li>{formik.errors.passwordConfirmation}</li>}
-                
+              
+                    <TextField 
+                        id="username" 
+                        label="Username" 
+                        variant="outlined" 
+                        error={!!formik.errors.username}
+                        helperText={formik.errors.username}
+                        required
+                        value={formik.values.username}
+                        onChange={formik.handleChange}
+                    />
+               
+                <Box>
+                    {signup && <TextField 
+                        id="email"
+                        label="email"
+                        variant="outlined" 
+                        error={!!formik.errors.email}
+                        helperText={formik.errors.email}
+                        required
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                    />}
+                </Box>
+                <Box>
+                    <TextField 
+                        id="password"
+                        label="password"
+                        type="password"
+                        variant="outlined" 
+                        error={!!formik.errors.password}
+                        helperText={formik.errors.password}
+                        required
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                    />
+                </Box>
+                <Box>
+                    {signup && <TextField 
+                        id="passwordConfirmation"
+                        label="passwordConfirmation"
+                        type="password"
+                        variant="outlined" 
+                        error={!!formik.errors.passwordConfirmation}
+                        helperText={formik.errors.passwordConfirmation}
+                        required
+                        value={formik.values.passwordConfirmation}
+                        onChange={formik.handleChange}
+                    />}
+                </Box>
                 <Button variant="contained" type="submit">Submit</Button>
             </form>
-        </Box>
+        </Container>
     )
 }
 

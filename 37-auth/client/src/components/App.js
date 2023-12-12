@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@mui/material";
-// import { Switch, Route } from "react-router-dom";
 
 import Signup from "./Signup";
+import ProductionContainer from "./ProductionContainer";
 
 function App() {
   const [user, setUser] = useState(null)
@@ -36,8 +36,8 @@ function App() {
   }
 
   return <div>
-    in the site!
     <Button variant="contained" onClick={handleLogout}>Logout</Button>
+    <ProductionContainer />
   </div>
 }
 
